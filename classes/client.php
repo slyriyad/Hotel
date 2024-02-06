@@ -10,4 +10,23 @@ class Client {
         $this->prenom = $prenom;
               
     }
+
+    
+    public function getNom()
+    {
+        return $this->nom;
+    }
+
+    
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->prenom." ".$this->nom;
+    }
 }
