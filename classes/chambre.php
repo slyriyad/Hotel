@@ -5,7 +5,7 @@ class Chambre {
     private float $prix;
     private int $nbLits;
     private string $wifi;
-    private bool $isDisponible;
+    private bool $isDisponible = true;
     private Hotel $hotel;
     private array $reservations;
 
@@ -14,10 +14,10 @@ class Chambre {
         $this->numChambre = $numChambre;
         $this->prix = $prix;
         $this->nbLits = $nbLits;
-        $this->wifi = $nbLits;
-        $this->isDisponible = true;
+        $this->wifi = $wifi;
         $this->hotel = $hotel;
         $this->hotel->addChambre($this);     
+        $this->reservations = [] ;  
     }
 
     
@@ -84,6 +84,31 @@ class Chambre {
         return $this;
     }
 
+
+    public function getIsDisponible(): Bool
+    {
+        return $this->isDisponible;
+    }
+
+    
+    public function setIsDisponible($isDisponible)
+    {
+        $this->isDisponible = $isDisponible;
+
+        return $this;
+    }
+
+
+
+    public function getHotel()
+    {
+        return $this->hotel;
+    }
+
+
+    public function __toString(){
+        return "Chambre : .".$this->numChambre."(".$this->nbLits." lits - ".$this->prix."€ - wifi : ".$this->wifi.") ";
+    }
     
      
     public function isDisponible(DateTime $dateDisponibilite = new DateTime())
@@ -93,5 +118,28 @@ class Chambre {
         // si oui => return false
         // si non => return true
     }
+    public function afficherEtat()
+    {
+        if($this->isDisponible){
+            return "<p class='etat1'>disponible</p>";
+        } else{
+            return "<p class='etat2' >reservé</p>";
+        }
+    }
+
+    public function addReservation(Reservation $reservation)
+    {
+        $this->reservations[] = $reservation;
+    }
+
+
+    public function affInfoResaHot()
+    {
+        foreach($this->reservations as $resa){
+            echo $resa ;
+        }
+    }
 
 }
+   
+

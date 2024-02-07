@@ -7,6 +7,7 @@ class Hotel {
     private string $codePostale;
     private string $ville ;
     private array $chambres;
+    private array $reservationsHotel;
 
     public function __construct(string $nom,int $nbEtoiles, string $adresse, string $codePostale, string $ville) 
     {
@@ -15,7 +16,8 @@ class Hotel {
         $this->adresse = $adresse;
         $this->codePostale = $codePostale;
         $this->ville = $ville;
-        $this->chambres = [] ;      
+        $this->chambres = [] ; 
+        $this->reservationsHotel = [];  
     }
 
   
@@ -47,7 +49,6 @@ class Hotel {
     }
     
 
-    
     public function getAdresse()
     {
         return $this->adresse;
@@ -129,6 +130,12 @@ class Hotel {
     }
 
 
+    public function addReservationHotel(Reservation $reservationHotel)
+    {
+        $this->reservationsHotel[] = $reservationHotel;
+    }
+
+
     public function getNbChambres()
     {
         return count($this->chambres);
@@ -137,45 +144,66 @@ class Hotel {
 
     public function getNbChambresReserv()
     {
-        // 
-
-        // Utilisation de array_filter pour filtrer les éléments faux
-        $elementsFaux = array_filter($this->chambres, function($element) {
-            return !$element; // Retourne true si l'élément est faux
-        });
-
-        // Utilisation de count pour obtenir le nombre d'éléments faux
-        $nombreElementsFaux = count($elementsFaux);
-
-        // Affichage du résultat
-        return "Nombre de chambres réservèes : $nombreElementsFaux";
-        // echo count($this->chambres);
+        return count($this->reservationsHotel);
     }
 
 
     public function getNbChambresDispo()
     {
-                // Utilisation de array_filter pour filtrer les éléments vrais
-        $elementsVrais = array_filter($this->chambres, function($element) {
-            return (bool)$element; // Retourne true si l'élément est vrai
-        });
-
-        // Utilisation de count pour obtenir le nombre d'éléments vrais
-        $nombreElementsVrais = count($elementsVrais);
-
-        // Affichage du résultat
-        return "Nombre de chambre de dispo : $nombreElementsVrais";
+        return $this->getNbChambres() - $this->getNbChambresReserv();
     }
 
 
     public function affInfosHotel()
     {
-        echo "<strong style='font-size: 20px;'>".$this."</strong><br>
+        echo "<br><strong style='font-size: 20px;'>".$this."</strong><br>
         ".$this->adresse." ".$this->codePostale." ".$this->ville."<br>
         Nombre de chambres : ".$this->getNbChambres()."<br>
-        ".$this->getNbChambresReserv()."<br>
-        ".$this->getNbChambresDispo()."<br>";
+        Nombre de chambres réservées : ".$this->getNbChambresReserv()."<br>
+        Nombre de chambres dispo : ".$this->getNbChambresDispo()."<br>";
+    }
+    
+
+    public function affInfoResaHot()
+    {
+        if(count($this->reservationsHotel) >= 1)
+        {
+            echo "<br><strong style='font-size: 20px;'>Réservation de l'hôtel ".$this."</strong><br>
+            <p>".count($this->reservationsHotel)." réservations</p>";
+            foreach($this->reservationsHotel as $resa){
+                echo 
+                $resa->getClient() ."-". $resa->getChambre() ."-". $resa ."<br>";
+        }
+        }else{
+            echo "<br><strong style='font-size: 20px;'>Réservation de l'hôtel ".$this."</strong><br>aucune réservation !";
+        }
     }
 
-      
+
+    function statutsChambres()
+{
+    
+        $result = "<table>
+                    <thead>
+                        <tr>
+                            <th>CHAMBRE</th>
+                            <th>PRIX</th>
+                            <th>WIFI</th>
+                            <th>ETAT</th>
+                        </tr>
+                    </thead>
+                <tbody>";
+        foreach ($this->chambres as $resa ) {
+            $result .= "<tr>
+                            <td>Chambre ".$resa->getNumChambre()."</td>
+                            <td>" . $resa->getPrix() . "</td>
+                            <td>" . $resa->getWifi() . "</td>
+                            <td>" . $resa->afficherEtat() . "</td>
+                        </tr>";
+        }
+
+        $result .= "</tbody></table>";
+        echo $result;
+}
+
 }
